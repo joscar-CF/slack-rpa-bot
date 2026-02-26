@@ -2,7 +2,8 @@ name: Execute Slack RPA
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    # Se ejecuta cada hora (minuto 0), de lunes a viernes (1-5)
+    - cron: '0 * * * 1-5'
   workflow_dispatch:
 
 jobs:
