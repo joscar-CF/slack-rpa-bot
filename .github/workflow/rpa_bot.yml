@@ -2,14 +2,14 @@ name: Execute Slack RPA
 
 on:
   schedule:
-    - cron: '0 * * * *' # Se ejecuta cada hora
-  workflow_dispatch:   # Permite que tú le des al botón "Run" manualmente
+    - cron: '0 * * * *'
+  workflow_dispatch:
 
 jobs:
   run-rpa:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # IMPORTANTE: Permite que el bot guarde los cambios en el JSON
+      contents: write
 
     steps:
       - name: Checkout código
@@ -18,14 +18,13 @@ jobs:
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.12'
 
       - name: Instalar dependencias
         run: pip install requests
 
       - name: Ejecutar RPA
         env:
-          # Pasamos el secreto como variable de entorno
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
           ID_SMOKE_CHANNEL: ${{ secrets.ID_SMOKE_CHANNEL }}
           ID_QA_CHANNEL: ${{ secrets.ID_QA_CHANNEL }}
@@ -36,5 +35,4 @@ jobs:
           git config --global user.name "GitHub Action Bot"
           git config --global user.email "actions@github.com"
           git add rpa_state.json
-          # Si el archivo cambió (hubo rotación), hace commit y push
           git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 RPA: Rotación de encargado" && git push)
