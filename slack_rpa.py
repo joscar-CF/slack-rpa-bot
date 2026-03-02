@@ -73,7 +73,6 @@ def run_automation():
 
         print(f"DEBUG: Analizando {len(messages)} mensajes recibidos hoy...")
 
-        # --- CORRECCIÓN DE BÚSQUEDA ---
         for msg in messages:
             # Extraemos texto de todas las fuentes posibles dentro del mensaje
             texto_principal = msg.get("text", "")
@@ -92,6 +91,9 @@ def run_automation():
                 found = True
                 print(f"🎯 ¡MATCH ENCONTRADO! -> Contenido: {contenido_total[:60]}...")
                 break
+
+        # Definir encargado actual para uso en logs
+        current_responsible = QAS_LIST[state["current_index"]]
 
         # 3. Validar Rotación
         if found:
@@ -112,9 +114,9 @@ def run_automation():
                 state["last_rotation_date"] = today_str
                 save_state(state)
             else:
-                print("ℹ️ El mensaje de hoy ya fue procesado. No se rota.")
+                print(f"ℹ️ El mensaje de hoy ya fue procesado. El encargado sigue siendo: {current_responsible}")
         else:
-            print("😴 No se encontró el mensaje de aprobación aún.")
+            print(f"😴 No se encontró el mensaje de aprobación. El encargado actual sigue siendo: {current_responsible}")
 
         # 4. Notificar si estamos en la ventana horaria (Request 02 y 03)
         target_hour = 7
