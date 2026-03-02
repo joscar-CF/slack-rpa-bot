@@ -31,6 +31,16 @@ def save_state(state):
 
 # --- LÓGICA PRINCIPAL ---
 def run_automation():
+    # Configurar zona horaria local
+    tz_local = timezone(timedelta(hours=-4))
+    now_local = datetime.now(tz_local)
+
+    # BLOQUEO DE FIN DE SEMANA (Sábado = 5, Domingo = 6)
+    # Esto asegura que si GitHub lo despierta un Sábado a las 10 AM, el script se cierre solo.
+    if now_local.weekday() >= 5:
+        print(f"😴 Fin de semana detectado ({now_local.strftime('%A')}). RPA en pausa.")
+        return
+
     print(f"\n🚀 Ejecutando RPA - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     state = load_state()
 
